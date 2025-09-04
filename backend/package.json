@@ -11,6 +11,8 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
-    "@google/generative-ai": "^0.24.1"
+    "@google-cloud/firestore": "^7.11.3",
+    "@google/generative-ai": "^0.24.1",
+    "uuid": "^11.1.0"
   }
 }
