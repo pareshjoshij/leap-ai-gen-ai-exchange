@@ -1,0 +1,244 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Logo (Favicon) -->
+  <link rel="icon" type="image/png" href="images/Logos.png">
+
+  <title>Home | SkillPath AI </title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="assets/css/home.css">
+
+</head>
+<body>
+  <!-- Navigation Bar -->
+<header class="navbar">
+  <div class="container nav-container">
+    <div class="logo">SkillPath AI</div>
+    <nav class="nav-links" id="navLinks">
+      <a href="index.html" >Home</a>
+      <a href="offer.html">Offers</a>
+      <a href="about.html">About</a>
+      <a href="#" id="openLogin">Login </a>
+    </nav>
+    <div class="menu-toggle" id="menuToggle">☰</div>
+  </div>
+</header>
+<!-- Login Modal -->
+<div id="authModal" class="auth-modal">
+  <div class="auth-modal-content">
+    <span class="close-btn" id="closeModal">&times;</span>
+    
+
+    <!-- Login Form -->
+    <form id="loginForm" class="auth-form">
+      <h2 class="modal-title">Login</h2>
+      <input type="email" placeholder="Email" required>
+      <input type="password" placeholder="Password" required>
+      <button type="submit" class="btn-primary">Login</button>
+      <p class="switch-text">Don't have an account? 
+        <span id="switchToSignup" style="color:#0ea5e9; cursor:pointer;">Sign Up</span>
+      </p>
+    </form>
+
+    <!-- Sign Up Form (Hidden by default) -->
+    <form id="signupForm" class="auth-form" style="display:none;">
+      <h2 class="modal-title">Sign Up</h2>
+      <input type="text" placeholder="Full Name" required>
+      <input type="email" placeholder="Email" required>
+      <input type="password" placeholder="Password" required>
+      <button type="submit" class="btn-primary">Sign Up</button>
+      <p class="switch-text">Already have an account? 
+        <span id="switchToLogin" style="color:#0ea5e9; cursor:pointer;">Login</span>
+      </p>
+    </form>
+  </div>
+</div>
+
+<script>
+  const authModal = document.getElementById("authModal");
+  const closeModal = document.getElementById("closeModal");
+  const loginForm = document.getElementById("loginForm");
+  const signupForm = document.getElementById("signupForm");
+  const switchToSignup = document.getElementById("switchToSignup");
+  const switchToLogin = document.getElementById("switchToLogin");
+
+  // Show login by default
+  loginForm.style.display = "flex";
+  signupForm.style.display = "none";
+
+  // Switch links
+  switchToSignup.addEventListener("click", () => {
+    loginForm.style.display = "none";
+    signupForm.style.display = "flex";
+  });
+
+  switchToLogin.addEventListener("click", () => {
+    signupForm.style.display = "none";
+    loginForm.style.display = "flex";
+  });
+
+  // Close modal
+  closeModal.addEventListener("click", () => {
+    authModal.style.display = "none";
+  });
+
+  // Close by clicking outside
+  window.addEventListener("click", (e) => {
+    if(e.target === authModal){
+      authModal.style.display = "none";
+    }
+  });
+
+  // Auto open after 3 seconds
+  window.addEventListener("load", () => {
+    setTimeout(() => {
+      authModal.style.display = "block";
+    }, 3000);
+  });
+</script>
+
+<style>
+  .modal-title {
+    text-align: center;
+    font-family: Arial, sans-serif;
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  .switch-text {
+    text-align: center;
+    font-size: 14px;
+    color: #555;
+    margin-top: 10px;
+  }
+</style>
+
+
+  <!-- Hero Section -->
+<section class="hero">
+  <div class="container">
+    <h1 class="typewriter">Learn, Automate, and Grow with <span>SkillPath AI</span></h1>
+    <p>SkillPath AI is your intelligent partner for learning, productivity, and automation. 
+    Access AI-powered tools, get personalized guidance, and achieve your goals faster.</p>
+    <a href="chat.php" class="btn-primary">Start Exploring</a>
+  </div>
+</section>
+<!-- Features Section -->
+<section class="features">
+  <div class="container">
+    <h2>Features Of <span>SkillPath AI</span></h2>
+    <div class="feature-grid">
+      <div class="card">
+        <div class="icon-circle"><i class="fas fa-robot"></i></div>
+        <h3>AI Chat</h3>
+        <p>Engage in smart, human-like conversations with AI-powered chat tools.</p>
+      </div>
+      <div class="card">
+        <div class="icon-circle"><i class="fas fa-bolt"></i></div>
+        <h3>Productivity</h3>
+        <p>Boost your daily efficiency with intelligent productivity tools.</p>
+      </div>
+      <div class="card">
+        <div class="icon-circle"><i class="fas fa-cogs"></i></div>
+        <h3>Task Automation</h3>
+        <p>Automate repetitive tasks seamlessly and save valuable time.</p>
+      </div>
+      <div class="card">
+        <div class="icon-circle"><i class="fas fa-book-reader"></i></div>
+        <h3>Learning Assistant</h3>
+        <p>Get AI-powered guidance to enhance your learning experience.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="about-section" id="about">
+  <div class="container">
+    <h2 class="about-heading">About <span>SkillPath AI</span></h2>
+
+    <div class="about-row">
+      <div class="about-text">
+        <p>
+          SkillPath AI is an innovative, AI-powered student guidance platform created to help learners 
+          plan their careers, improve productivity, and build the skills they need for the future.
+          Inspired by leading AI platforms like <strong>Google Gemini</strong> and <strong>ChatGPT</strong>, 
+          SkillPath AI combines advanced technology with a personalized approach to learning and growth.
+        </p>&nbsp;
+        <p>
+          Our platform acts as a smart mentor — offering study recommendations, custom learning paths, 
+          productivity tools, and goal-tracking systems. Whether you're preparing for exams, exploring 
+          career options, or upgrading your skills, SkillPath AI empowers you to move forward 
+          with clarity and confidence.
+        </p><br>
+<p>
+  With SkillPath AI, learning becomes smarter, faster, and more enjoyable — helping you reach 
+  your goals with precision and ease. Our platform continuously adapts to your progress, ensuring 
+  you always stay on the path to success. Join thousands of learners who are transforming their 
+  future with SkillPath AI every day.
+</p>
+
+      </div>
+
+      <div class="about-image">
+        <img src="images/about-img.png" alt="SkillPath AI">
+      </div>
+    </div>
+  </div>
+</section>
+<section class="how-it-works">
+  <div class="container">
+    <h2>How It <span>Works</span></h2>
+
+<div class="steps">
+  <div class="step" data-step="1">
+    <div class="icon-circle">
+      <i class="fas fa-user-plus"></i>
+    </div>
+    <h3>Sign Up</h3>
+    <p>Create your free account and set up your personalized dashboard.</p>
+  </div>
+
+  <div class="step" data-step="2">
+    <div class="icon-circle">
+      <i class="fas fa-tools"></i>
+    </div>
+    <h3>Choose Tools</h3>
+    <p>Browse our AI-powered tools and pick the ones that best fit your goals.</p>
+  </div>
+
+  <div class="step" data-step="3">
+    <div class="icon-circle">
+      <i class="fas fa-rocket"></i>
+    </div>
+    <h3>Grow Smarter</h3>
+    <p>Use SkillPath AI to boost productivity and achieve faster results.</p>
+  </div>
+</div>
+</div>
+</section>
+  <!-- Call to Action Section -->
+<section class="cta">
+  <div class="container">
+    <h2>Start Using SkillPath AI Today</h2>
+    <p class="cta-subtitle">
+      Unlock your full potential with AI-powered learning tools, personalized guidance, 
+      and smart productivity features designed to help you achieve your goals faster.
+    </p>
+    <a href="chat.html" class="btn-primary">Get Started Now</a>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="footer-bottom">
+    <p>&copy; 2025 <strong>SkillPath AI</strong> • All Rights Reserved • Developed by 
+      <span class="dev-name">SkillPath AI Team</span>
+    </p>
+  </div>
+</footer>
+
+    <script defer src="assets/js/home.js"></script>
+</body>
+</html>

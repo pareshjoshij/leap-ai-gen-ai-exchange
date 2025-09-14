@@ -1,0 +1,450 @@
+/* Reset + Base */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Poppins', sans-serif;
+  background: #f9fbfd;
+  color: #333;
+  line-height: 1.6;
+}
+a { text-decoration: none; color: inherit; }
+
+.hero {
+  margin-top: -3%; /* Pulls section upward */
+  min-height: 70vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0 20px;
+
+}
+
+.hero-content {
+  max-width: 800px;
+}
+
+.hero-content h1 {
+  font-size: 3.5rem;
+  margin-bottom: 20px;
+}
+
+.hero-content h1 span {
+  color: #ffd86b;
+}
+
+.hero-content p {
+  font-size: 1.2rem;
+  margin-bottom: 40px;
+}
+
+.hero-content .btn {
+  background:#2575fc;
+  color: white;
+  padding: 14px 36px;
+  border-radius: 50px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: 0.3s ease;
+}
+
+.hero-content .btn:hover {
+  background: #fff;
+  color: #2575fc;
+}
+
+/* Offers Section */
+.offers {
+  margin-top: -8%;
+  background: white;
+  padding: 100px 20px;
+  font-family: "Inter", sans-serif;
+  color: #2d2d2d;
+}
+
+.offers-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.offers-title {
+  text-align: center;
+  font-size: 2.75rem;
+  font-weight: 700;
+  color:#2575fc;
+  margin-bottom: 70px;
+}
+.offers-title span{
+  text-align: center;
+  font-size: 2.75rem;
+  font-weight: 700;
+  color: #facc15;
+  margin-bottom: 70px;
+}
+/* Grid */
+.offers-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 32px;
+}
+
+/* Cards */
+.offer-column {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 40px 35px;
+  transition: border 0.3s ease, transform 0.3s ease;
+}
+
+.offer-column:hover {
+  border-color: #4f46e5;
+  transform: translateY(-4px);
+}
+
+.offer-column.featured {
+  border: 2px solid #4f46e5;
+  background: #f5f5ff;
+}
+
+.plan-name {
+  text-align: center;
+  font-size: 1.9rem;
+  font-weight: 700;
+  color:#2575fc;
+  margin-bottom: 30px;
+}
+
+/* Features */
+.offer-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.offer-list li {
+  border-top: 1px solid #e5e7eb;
+  padding: 20px 0;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.offer-list li:first-child {
+  border-top: none;
+}
+
+.feature-title {
+  display: block;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 4px;
+}
+.plan-btn {
+  text-align: center;
+  margin-top: 30px;
+}
+
+.get-plan {
+  display: inline-block;
+  background:#2575fc;
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+  padding: 14px 28px;
+  border-radius: 8px;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.get-plan:hover {
+  background:#2575fc;
+  transform: translateY(-2px);
+}
+
+/* Section Base */
+.features {
+  margin-top: -8%;
+  padding: 80px 20px;
+  background: #f9fafb; /* light gray for contrast */
+  text-align: center;
+}
+
+/* Section Heading */
+.features-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 60px;
+  position: relative;
+  display: inline-block;
+}
+
+.features-title span {
+  color: #0ea5e9; /* highlight color */
+}
+
+/* Decorative line under heading */
+.features-title::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -15px;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 4px;
+  background: #0ea5e9;
+  border-radius: 2px;
+}
+
+/* Features Grid */
+.features .container.grid {
+  display: grid;
+  gap: 40px;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* Individual Feature Card */
+/* Individual Feature Card */
+.feature {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 40px 25px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  border: 2px solid transparent; /* <-- add default transparent border */
+  transition: 
+    transform 0.3s ease, 
+    box-shadow 0.3s ease,
+    border-color 0.3s ease;       /* <-- animate border color too */
+}
+
+.feature:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+  border-color: #0ea5e9;           /* <-- slim skyblue border on hover */
+}
+
+/* Icon */
+.feature i {
+  font-size: 2.2rem;
+  color: #0ea5e9;
+  margin-bottom: 20px;
+}
+
+/* Feature Title */
+.feature h4 {
+  font-size: 1.4rem;
+  color: #0f172a;
+  margin-bottom: 10px;
+}
+
+/* Feature Description */
+.feature p {
+  font-size: 1rem;
+  color: #475569;
+  line-height: 1.6;
+}  
+/* FAQ Section Base */
+.faq {
+  padding: 80px 20px;
+  background: #f9fafb;
+}
+
+/* Section Heading */
+.faq-title {
+  text-align: center;
+  font-size: 2.75rem;
+  font-weight: 700;
+  color:#0ea5e9;
+  margin-bottom: 70px;
+}
+.faq-title span{
+  text-align: center;
+  font-size: 2.75rem;
+  font-weight: 700;
+  color: #facc15;
+  margin-bottom: 70px;
+}
+/* Decorative line under heading */
+.faq-title::after {
+ 
+  position: absolute;
+  left: 50%;
+  bottom: -15px;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 4px;
+  background: #0ea5e9;
+  border-radius: 2px;
+}
+/* FAQ Items */
+.faq-item {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  margin-bottom: 20px;
+  overflow: hidden;
+  border: 1px solid #e5e7eb;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.faq-item:hover {
+  border-color: #0ea5e9;
+  box-shadow: 0 6px 16px rgba(14,165,233,0.08);
+}
+
+/* Question Button */
+.faq-question {
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #0f172a;
+  padding: 20px 25px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.faq-question i {
+  transition: transform 0.3s ease;
+  color: #0ea5e9;
+}
+
+/* Answer container */
+.faq-answer {
+  display: none;
+  margin-top: 10px;
+  padding: 20px 25px;
+  background: #f0f9ff;              /* light sky-blue background */
+  color: #334155;                   /* darker readable text */
+  line-height: 1.8;
+  font-size: 1.05rem;
+  border-left: 4px solid #0ea5e9;   /* accent left border */
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  animation: fadeSlide 0.3s ease;   /* add animation */
+}
+
+/* When active */
+.faq-item.active .faq-answer {
+  display: block;
+}
+
+/* Smooth fade & slide animation */
+@keyframes fadeSlide {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.faq-item.active .faq-question i {
+  transform: rotate(180deg);
+}
+
+
+/* Footer */
+footer {
+  background: #0284c7;
+  color: #fff;
+  text-align: center;
+  padding: 20px;
+}
+.footer-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+.footer-links a {
+  color: #fff;
+  margin: 0 10px;
+  text-decoration: none;
+}
+.footer-links a:hover {
+  text-decoration: underline;
+}
+.social-icons a {
+  margin: 0 8px;
+  font-size: 1.2rem;
+  color: #fff;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .nav-links {
+    position: absolute;
+    top: 60px;
+    right: 0;
+    background: #0ea5e9;
+    flex-direction: column;
+    width: 200px;
+    display: none;
+    padding: 15px;
+  }
+  .nav-links.show {
+    display: flex;
+  }
+  .menu-toggle {
+    display: block;
+    color: #fff;
+  }
+  .about-content {
+    flex-direction: column;
+  }
+}
+/* Modern Footer - Gemini AI Inspired */
+.site-footer {
+  background: linear-gradient(135deg, #00c6ff, #0072ff); /* subtle sky blue gradient */
+  padding: 1.2rem 0;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);           /* soft shadow for depth */
+}
+
+.footer-bottom {
+  text-align: center;
+  font-family: 'Poppins', sans-serif;
+  color: #ffffff;                                       /* white text */
+  font-size: 1.2rem;
+  line-height: 1.6;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+}
+
+.footer-bottom strong {
+  color: #ffffff;                                      /* brand name white */
+  font-weight: 700;
+}
+
+.dev-name {
+  color: #ffeb3b;                                      /* bright accent color for dev name */
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.dev-name:hover {
+  color: #ffffff;                                     /* hover effect */
+  transform: translateY(-2px);                        /* subtle lift effect */
+}
+
+/* Responsive behavior */
+@media (max-width: 768px) {
+  .footer-bottom {
+    font-size: 0.85rem;
+    padding: 0 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer-bottom {
+    font-size: 0.8rem;
+    padding: 0 0.5rem;
+  }
+}
