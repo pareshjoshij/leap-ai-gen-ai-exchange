@@ -1,49 +1,38 @@
-const { GoogleAuth } = require('google-auth-library');
-const { DiscussServiceClient } = require("@google-ai/generativelanguage");
+const express = require('express');
+const { GoogleGenerativeAI } = require("@google/generative-ai");
 const { Firestore } = require('@google-cloud/firestore');
 const { v4: uuidv4 } = require('uuid');
+const { SearchServiceClient } = require('@google-cloud/discoveryengine').v1;
 
 // --- CONFIGURATION ---
-// IMPORTANT: Replace these placeholders with your actual Project and Data Store IDs.
-const PROJECT_ID = 'leapaitest'; // The ID of your Google Cloud project (e.g., 'leapaitest')
-const DATA_STORE_ID ='career-articles_1758301775526'; // The ID of your Vertex AI Search Data Store
+// Ensure this project ID matches the one you are deploying to.
+const PROJECT_ID = 'leapaitest'; 
+// Replace this with the Data Store ID you copied from the Vertex AI Search console.
+const DATA_STORE_ID = 'career-articles_1758301775526'; 
+const LOCATION = 'global'; // The location of your Data Store
 
 // Initialize clients
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 const firestore = new Firestore();
-const generativeClient = new DiscussServiceClient({
-    authClient: new GoogleAuth().fromJSON({
-        scopes: ["https://www.googleapis.com/auth/cloud-platform"],
-    }),
+const discoveryClient = new SearchServiceClient();
+
+const app = express();
+app.use(express.json()); // Middleware to parse JSON bodies
+
+// --- CORS Middleware ---
+// This is crucial for allowing your frontend to call this backend.
+app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    if (req.method === 'OPTIONS') {
+        return res.sendStatus(204);
+    }
+    next();
 });
 
-const systemPrompt = `
-You are Leap AI, an intelligent and empathetic personal career architect for Indian students.
-Your primary goal is to provide a fact-based, data-driven career roadmap.
-You MUST use the provided search results as the primary source for your answer.
-Do not mention the search results directly (e.g., "According to the search results..."). Instead, synthesize the information into a natural, conversational response.
-If the search results do not contain relevant information to answer the user's question, you must state that you couldn't find specific information in the knowledge base and then answer based on your general knowledge.
-`;
-
-/**
- * The main cloud function to handle advanced search and chat requests.
- * @param {express.Request} req The request object.
- * @param {express.Response} res The response object.
- */
-exports.handler = async (req, res) => {
-    // Set CORS headers
-    res.set('Access-Control-Allow-Origin', '*');
-    if (req.method === 'OPTIONS') {
-        res.set('Access-Control-Allow-Methods', 'POST');
-        res.set('Access-control-allow-headers', 'Content-Type');
-        res.set('Access-Control-Max-Age', '3600');
-        res.status(204).send('');
-        return;
-    }
-
-    if (req.method !== 'POST') {
-        return res.status(405).json({ error: 'Method Not Allowed' });
-    }
-
+// The main logic, now inside an Express route handler
+const handleChatRequest = async (req, res) => {
     try {
         const userInput = req.body.message;
         let sessionId = req.body.sessionId;
@@ -56,41 +45,45 @@ exports.handler = async (req, res) => {
             sessionId = uuidv4();
         }
 
-        // --- Step 1: Search the Knowledge Base with Vertex AI Search ---
-        console.log(`Searching for: "${userInput}"`);
-        const searchResponse = await searchDataStore(userInput);
-        const searchResultsText = searchResponse.map(result => `Title: ${result.title}\nSnippet: ${result.snippet}`).join('\n\n');
-        console.log('Search Results Context:', searchResultsText);
+        // --- Step 1: Search for Grounded Context ---
+        const searchRequest = {
+            servingConfig: `projects/${PROJECT_ID}/locations/${LOCATION}/collections/default_collection/dataStores/${DATA_STORE_ID}/servingConfigs/default_serving_config`,
+            query: userInput,
+            pageSize: 3,
+            queryExpansionSpec: {
+                condition: 'AUTO',
+            },
+            spellCorrectionSpec: {
+                mode: 'AUTO',
+            },
+        };
+        const [searchResponse] = await discoveryClient.search(searchRequest);
+        const context = searchResponse.results
+            .map(result => result.document.derivedStructData.snippets[0].snippet)
+            .join('\n\n');
 
-        // --- Step 2: Retrieve Chat History from Firestore ---
-        const messagesRef = firestore.collection('sessions_advanced').doc(sessionId).collection('messages');
+        // --- Step 2: Retrieve Chat History ---
+        const messagesRef = firestore.collection('sessions').doc(sessionId).collection('messages');
         const historySnapshot = await messagesRef.orderBy('timestamp', 'asc').limitToLast(4).get();
         const history = historySnapshot.docs.map(doc => ({
-            author: doc.data().role === 'user' ? 'user' : 'model',
-            content: doc.data().text,
+            role: doc.data().role,
+            parts: [{ text: doc.data().text }],
         }));
 
-        // --- Step 3: Call Gemini with Grounded Context ---
-        const groundedPrompt = [
-            {
-                author: 'user',
-                content: `Search Results Context:\n${searchResultsText}\n\nUser's Question: ${userInput}`
-            }
-        ];
-
-        const [geminiResponse] = await generativeClient.generateMessage({
-            model: `models/chat-bison`,
-            prompt: {
-                context: systemPrompt,
-                examples: [],
-                messages: [...history, ...groundedPrompt],
-            },
+        // --- Step 3: Call Gemini with Grounded Prompt ---
+        const systemPrompt = `You are Leap AI, an expert career architect. Based ONLY on the following context from our knowledge base, answer the user's question. If the context doesn't have the answer, say that you don't have enough information on that topic. Context: "${context}"`;
+        
+        const model = genAI.getGenerativeModel({
+            model: "gemini-1.5-flash",
+            systemInstruction: systemPrompt,
         });
 
-        const aiResponseText = geminiResponse.candidates[0].content;
-        console.log('AI Response:', aiResponseText);
+        const chat = model.startChat({ history: history });
+        const result = await chat.sendMessage(userInput);
+        const response = await result.response;
+        const aiResponseText = response.text();
 
-        // --- Step 4: Save New Messages to Firestore ---
+        // --- Step 4: Save to Firestore ---
         await messagesRef.add({
             role: 'user',
             text: userInput,
@@ -102,7 +95,7 @@ exports.handler = async (req, res) => {
             timestamp: Firestore.FieldValue.serverTimestamp()
         });
 
-        // --- Step 5: Send the Response to the User ---
+        // --- Step 5: Send Response ---
         res.status(200).json({
             reply: aiResponseText,
             sessionId: sessionId
@@ -114,41 +107,13 @@ exports.handler = async (req, res) => {
     }
 };
 
-/**
- * Searches the Vertex AI Data Store.
- * @param {string} query The user's search query.
- * @returns {Promise<Array<{title: string, snippet: string}>>} A promise that resolves to an array of search results.
- */
-async function searchDataStore(query) {
-    const auth = new GoogleAuth({
-        scopes: 'https://www.googleapis.com/auth/cloud-platform'
-    });
-    const accessToken = await auth.getAccessToken();
+// Define the route
+app.post('/', handleChatRequest);
 
-    const location = 'global'; // Or your specific location
-    const url = `https://discoveryengine.googleapis.com/v1alpha/projects/${PROJECT_ID}/locations/${location}/collections/default_collection/dataStores/${DATA_STORE_ID}/servingConfigs/default_serving_config:search`;
-
-    const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-            'Authorization': `Bearer ${accessToken}`,
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            query: query,
-            pageSize: 3 // Get the top 3 most relevant results
-        })
-    });
-
-    if (!response.ok) {
-        const errorBody = await response.text();
-        throw new Error(`Vertex AI Search failed with status ${response.status}: ${errorBody}`);
-    }
-
-    const data = await response.json();
-    return (data.results || []).map(result => ({
-        title: result.document.derivedStructData.title,
-        snippet: result.document.derivedStructData.snippets[0].snippet
-    }));
-}
+// --- START THE SERVER ---
+// Cloud Run provides the PORT environment variable.
+const port = process.env.PORT || 8080;
+app.listen(port, () => {
+    console.log(`Leap AI Search Backend listening on port ${port}`);
+});
 
