@@ -2,28 +2,19 @@ const express = require('express');
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 const { Firestore } = require('@google-cloud/firestore');
 const { v4: uuidv4 } = require('uuid');
-const { SearchServiceClient } = require('@google-cloud/discoveryengine').v1;
-
-// --- CONFIGURATION ---
-// Ensure this project ID matches the one you are deploying to.
-const PROJECT_ID = 'leapaitest'; 
-// Replace this with the Data Store ID you copied from the Vertex AI Search console.
-const DATA_STORE_ID = 'career-articles_1758301775526'; 
-const LOCATION = 'global'; // The location of your Data Store
 
 // Initialize clients
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 const firestore = new Firestore();
-const discoveryClient = new SearchServiceClient();
 
 const app = express();
 app.use(express.json()); // Middleware to parse JSON bodies
 
 // --- CORS Middleware ---
-// This is crucial for allowing your frontend to call this backend.
+// This allows your frontend to call the backend from any domain.
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
     if (req.method === 'OPTIONS') {
         return res.sendStatus(204);
@@ -31,7 +22,15 @@ app.use((req, res, next) => {
     next();
 });
 
-// The main logic, now inside an Express route handler
+// The system prompt for the AI model
+const systemPrompt = `
+You are Leap AI, an intelligent and empathetic personal career architect for Indian students. Your persona is encouraging and insightful. Your goal is to understand the user's interests through natural conversation and provide an actionable roadmap. Do not sound like a generic chatbot. Review the provided chat history to understand the context of the conversation.
+`;
+
+/**
+ * The main logic, now inside an Express route handler.
+ * This handles the chat request and response.
+ */
 const handleChatRequest = async (req, res) => {
     try {
         const userInput = req.body.message;
@@ -45,24 +44,7 @@ const handleChatRequest = async (req, res) => {
             sessionId = uuidv4();
         }
 
-        // --- Step 1: Search for Grounded Context ---
-        const searchRequest = {
-            servingConfig: `projects/${PROJECT_ID}/locations/${LOCATION}/collections/default_collection/dataStores/${DATA_STORE_ID}/servingConfigs/default_serving_config`,
-            query: userInput,
-            pageSize: 3,
-            queryExpansionSpec: {
-                condition: 'AUTO',
-            },
-            spellCorrectionSpec: {
-                mode: 'AUTO',
-            },
-        };
-        const [searchResponse] = await discoveryClient.search(searchRequest);
-        const context = searchResponse.results
-            .map(result => result.document.derivedStructData.snippets[0].snippet)
-            .join('\n\n');
-
-        // --- Step 2: Retrieve Chat History ---
+        // --- Step 1: Retrieve Chat History from Firestore ---
         const messagesRef = firestore.collection('sessions').doc(sessionId).collection('messages');
         const historySnapshot = await messagesRef.orderBy('timestamp', 'asc').limitToLast(4).get();
         const history = historySnapshot.docs.map(doc => ({
@@ -70,32 +52,31 @@ const handleChatRequest = async (req, res) => {
             parts: [{ text: doc.data().text }],
         }));
 
-        // --- Step 3: Call Gemini with Grounded Prompt ---
-        const systemPrompt = `You are Leap AI, an expert career architect. Based ONLY on the following context from our knowledge base, answer the user's question. If the context doesn't have the answer, say that you don't have enough information on that topic. Context: "${context}"`;
-        
+        // --- Step 2: Call the Gemini API with History ---
         const model = genAI.getGenerativeModel({
             model: "gemini-1.5-flash",
             systemInstruction: systemPrompt,
         });
-
+        
         const chat = model.startChat({ history: history });
         const result = await chat.sendMessage(userInput);
         const response = await result.response;
         const aiResponseText = response.text();
 
-        // --- Step 4: Save to Firestore ---
+        // --- Step 3: Save New Messages to Firestore ---
         await messagesRef.add({
             role: 'user',
             text: userInput,
             timestamp: Firestore.FieldValue.serverTimestamp()
         });
+
         await messagesRef.add({
             role: 'model',
             text: aiResponseText,
             timestamp: Firestore.FieldValue.serverTimestamp()
         });
 
-        // --- Step 5: Send Response ---
+        // --- Step 4: Send the Response to the User ---
         res.status(200).json({
             reply: aiResponseText,
             sessionId: sessionId
@@ -107,13 +88,12 @@ const handleChatRequest = async (req, res) => {
     }
 };
 
-// Define the route
+// Define the main route for your chat application
 app.post('/', handleChatRequest);
 
 // --- START THE SERVER ---
 // Cloud Run provides the PORT environment variable.
 const port = process.env.PORT || 8080;
 app.listen(port, () => {
-    console.log(`Leap AI Search Backend listening on port ${port}`);
+    console.log(`Leap AI backend listening on port ${port}`);
 });
-
