@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="images/Logos.png">
+
+  <title>ChatBoot Page | Lead  AI Website</title>
+
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="assets/css/chat.css">
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <!-- jsPDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <span class="brand">Lead AI</span>
+      <button id="sidebarToggle" class="menu-btn" title="Collapse sidebar">
+        <i class="fas fa-bars"></i>
+      </button>
+    </div>
+
+    <nav class="sidebar-nav">
+      <button class="nav-item active"id="newChatBtn"><i class="fas fa-plus"></i><span>New Chat</span></button>
+      <button class="nav-item"><i class="fas fa-book"></i><span>Library</span></button>
+      <button class="nav-item"><i class="fas fa-clock"></i><span>History</span></button>
+      <button class="nav-item"><i class="fas fa-cog"></i><span>Settings</span></button>
+    </nav>
+  </aside>
+<!-- MAIN -->
+<main class="main">
+  <header class="header">
+    <h1 class="title">Chat</h1>
+    <div class="header-actions">
+      <button id="themeToggle" class="icon-btn" title="Toggle theme"><i class="fas fa-moon"></i></button>
+      <button id="downloadPDF" class="icon-btn" title="Download chat"><i class="fas fa-file-download"></i></button>
+      <button id="loginBtn" class="icon-btn" title="Login"><i class="fas fa-user"></i></button>
+    </div>
+  </header>
+
+  <!-- CHAT AREA -->
+  <section id="chatArea" class="chat-area">
+    <!-- Center welcome message -->
+  <div id="welcomeMessage" class="welcome-message">
+  <h2>Welcome, Champion!</h2>
+  <p>Unlock your curiosity — ask anything and let's explore the possibilities together!</p>
+</div>
+
+
+    <ul id="messages" class="messages"></ul>
+  </section>
+
+  <!-- INPUT BAR -->
+  <footer class="composer">
+    <textarea id="input" class="input" rows="1" placeholder="Write a message..."></textarea>
+    <button id="sendBtn" class="send-btn"><i class="fas fa-paper-plane"></i></button>
+  </footer>
+</main>
+
+
+<!-- LOGIN/SIGNUP MODAL -->
+<div id="authModal" class="auth-modal">
+  <div class="auth-modal-content">
+    <span class="close-btn" id="closeModal">&times;</span>
+
+    <!-- Login Form -->
+    <form id="loginForm" class="auth-form">
+      <h2 class="modal-title" style="color: black;text-align: center;font-family: Arial, Helvetica, sans-serif;font-weight: 300px;" >Login</h2>
+      <input type="email" placeholder="Email" required>
+      <input type="password" placeholder="Password" required>
+      <button type="submit" class="btn-primary">Login</button>
+      <button type="button" class="btn-google"><i class="fab fa-google"></i> Login with Google</button>
+      <p class="switch-text" style="color: black;text-align: center;font-family: Arial, Helvetica, sans-serif;font-weight: 300px;">Don't have an account? 
+        <span id="switchToSignup" class="switch-link"style="color: black;text-align: center;font-family: Arial, Helvetica, sans-serif;font-weight: 300px;">Sign Up</span>
+      </p>
+    </form>
+
+    <!-- Sign Up Form -->
+    <form id="signupForm" class="auth-form" style="display:none;">
+      <h2 class="modal-title" style="color: black;text-align: center;font-family: Arial, Helvetica, sans-serif;font-weight: 300px;">Sign Up</h2>
+      <input type="text" placeholder="Full Name" required>
+      <input type="email" placeholder="Email" required>
+      <input type="password" placeholder="Password" required>
+      <button type="submit" class="btn-primary">Sign Up</button>
+      <button type="button" class="btn-google"><i class="fab fa-google"></i> Sign Up with Google</button>
+      <p class="switch-text" style="color: black;text-align: center;font-family: Arial, Helvetica, sans-serif;font-weight: 300px;">Already have an account? 
+        <span id="switchToLogin" class="switch-link" style="color: black;text-align: center;font-family: Arial, Helvetica, sans-serif;font-weight: 300px;">Login</span>
+      </p>
+    </form>
+  </div>
+</div>
+
+<!-- JS -->
+<script src="assets/js/chat.js"></script>
+</body>
+</html>

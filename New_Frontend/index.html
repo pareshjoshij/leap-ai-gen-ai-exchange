@@ -1,0 +1,191 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Logo (Favicon) -->
+  <link rel="icon" type="image/png" href="images/Logos.png">
+
+  <title>Home Page | Lead  AI Website </title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="assets/css/home.css">
+
+</head>
+<body>
+  <header class="navbar">
+  <div class="container nav-container">
+    <div class="logo">Leap AI</div>
+    <nav class="nav-links" id="navLinks">
+      <a href="index.html">Home</a>
+      <a href="offer.html" >Offers</a>
+      <a href="contact.html">Contact</a>
+      <a href="about.html">About</a>
+    </nav>
+    <div class="menu-toggle" id="menuToggle">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+  </div>
+</header>
+
+
+
+  <!-- Hero Section -->
+<section class="hero">
+  <div class="container">
+    <h1 class="typewriter">Learn, Automate, and Grow with <span>Leap AI</span></h1>
+    <p>Leap AI is your intelligent partner for learning, productivity, and automation. 
+    Access AI-powered tools, get personalized guidance, and achieve your goals faster.</p>
+    <a href="chat.html" class="btn-primary" >Get Started Free</a>&nbsp;&nbsp;
+    <!-- Button -->
+<a href="#" class="btn-primary" id="openVideo">Watch Video</a>
+
+<!-- Video Container (hidden initially) -->
+<div id="videoModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); justify-content:center; align-items:center;">
+  <div style="position:relative; width:80%; max-width:800px;">
+    <span id="closeVideo" style="position:absolute; top:10px; right:20px; font-size:30px; color:white; cursor:pointer;">&times;</span>
+    <video width="100%" controls autoplay>
+      <source src="videos/lead ai video 2.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+  </div>
+</div>
+
+<script>
+  const openBtn = document.getElementById('openVideo');
+  const modal = document.getElementById('videoModal');
+  const closeBtn = document.getElementById('closeVideo');
+
+  openBtn.onclick = () => { modal.style.display = 'flex'; }
+  closeBtn.onclick = () => { modal.style.display = 'none'; }
+</script>
+
+  </div>
+</section>
+<!-- Features Section -->
+<section class="features">
+  <div class="container">
+    <h2>Features Of <span>Leap AI</span></h2>
+    <div class="feature-grid">
+      <div class="card">
+        <div class="icon-circle"><i class="fas fa-robot"></i></div>
+        <h3>AI Chat</h3>
+        <p>Engage in smart, human-like conversations with AI-powered chat tools.</p>
+      </div>
+      <div class="card">
+        <div class="icon-circle"><i class="fas fa-bolt"></i></div>
+        <h3>Productivity</h3>
+        <p>Boost your daily efficiency with intelligent productivity tools.</p>
+      </div>
+      <div class="card">
+        <div class="icon-circle"><i class="fas fa-cogs"></i></div>
+        <h3>Task Automation</h3>
+        <p>Automate repetitive tasks seamlessly and save valuable time.</p>
+      </div>
+      <div class="card">
+        <div class="icon-circle"><i class="fas fa-book-reader"></i></div>
+        <h3>Learning Assistant</h3>
+        <p>Get AI-powered guidance to enhance your learning experience.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="about-section" id="about">
+  <div class="container">
+    <h2 class="about-heading">About <span>Leap AI</span></h2>
+
+    <div class="about-row">
+      <div class="about-text">
+        <p class="animate-item">Leap AI is an innovative, AI-powered student guidance platform created to help learners plan their careers, improve productivity, and build the skills they need for the future. Inspired by leading AI platforms like <strong>Google Gemini</strong> and <strong>ChatGPT</strong>, Leap AI combines advanced technology with a personalized approach to learning and growth.</p>
+
+        <p class="animate-item">Our platform acts as a smart mentor — offering study recommendations, custom learning paths, productivity tools, and goal-tracking systems. Whether you're preparing for exams, exploring career options, or upgrading your skills, SkillPath AI empowers you to move forward with clarity and confidence.</p>
+
+        <p class="animate-item">With Leap AI, learning becomes smarter, faster, and more enjoyable — helping you reach your goals with precision and ease. Our platform continuously adapts to your progress, ensuring you always stay on the path to success. Join thousands of learners who are transforming their future with Leap AI every day.</p>
+      </div>
+
+      <div class="about-image animate-item">
+        <img src="images/about-img.png" alt="SkillPath AI">
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  // ===== Scroll-triggered animation =====
+  const animateItems = document.querySelectorAll('.animate-item');
+
+  const animateOnScroll = () => {
+    const triggerBottom = window.innerHeight / 5 * 4;
+
+    animateItems.forEach(item => {
+      const itemTop = item.getBoundingClientRect().top;
+
+      if(itemTop < triggerBottom) {
+        item.classList.add('show');
+      } 
+    });
+  }
+
+  window.addEventListener('scroll', animateOnScroll);
+  window.addEventListener('load', animateOnScroll);
+</script>
+<section class="how-section">
+    <div class="containers">
+      <h2>How It <span>Works</span></h2>
+
+      <div class="how-steps">
+        <div class="how-step">
+          <div class="step-icon">
+            <i class="fas fa-user-plus"></i>
+          </div>
+          <h3 class="step-title">Sign Up</h3>
+          <p class="step-desc">Create your free account and set up your personalized dashboard.</p>
+        </div>
+
+        <div class="how-step">
+          <div class="step-icon">
+            <i class="fas fa-tools"></i>
+          </div>
+          <h3 class="step-title">Choose Tools</h3>
+          <p class="step-desc">Browse our AI-powered tools and pick the ones that best fit your goals.</p>
+        </div>
+
+        <div class="how-step">
+          <div class="step-icon">
+            <i class="fas fa-rocket"></i>
+          </div>
+          <h3 class="step-title">Grow Smarter</h3>
+          <p class="step-desc">Use Leap AI to boost productivity and achieve faster results.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+
+  <!-- Call to Action Section -->
+<section class="cta">
+  <div class="container">
+    <h2>Start Using Leap AI Today</h2>
+    <p class="cta-subtitle">
+      Unlock your full potential with AI-powered learning tools, personalized guidance, 
+      and smart productivity features designed to help you achieve your goals faster.
+    </p>
+    <a href="chat.html" class="btn-primary">Get Started Now</a>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="footer-bottom">
+    <p>&copy; 2025 <strong>Leap AI</strong> • All Rights Reserved • Developed by 
+      <span class="dev-name">: Leap AI Team</span>
+    </p>
+  </div>
+</footer>
+
+    <script defer src="assets/js/home.js"></script>
+</body>
+</html>
